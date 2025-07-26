@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-
+from typing import Optional
 app = FastAPI()
 
 @app.get("/")
@@ -23,3 +23,13 @@ async def items(id: int) -> dict:
             return post
 
     raise HTTPException(status_code=404, detail='Post not found')
+
+@app.get("/search")
+async def search(post_id: Optional[int] = None) -> dict:
+    if post_id:
+        for post in posts:
+            if post['id'] == post_id:
+                return post
+        raise HTTPException(status_code=404, detail='Post not found')
+    else:
+        return{"data": "No post id provided"}
